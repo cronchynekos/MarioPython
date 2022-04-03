@@ -10,15 +10,14 @@ class Koopa(Sprite):
     def __init__(self, screen, settings):
         super(Koopa, self).__init__()
         self.name = "Koopa"
-        self.settings = settings
         self.screen = screen
-
         self.index = 0
-        self.is_dead = False
-        self.facing_left = True
+        self.settings = settings
         self.hit_wall = False
         self.fall = False
-        self.death_timer = -1000
+        self.is_dead = False
+        self.facing_left = True
+        self.death_timer = -900
         self.last_tick = pygame.time.get_ticks()
 
         self.image = pygame.transform.scale(pygame.image.load("Images/koopa_2.png"),
@@ -40,11 +39,10 @@ class Koopa(Sprite):
         if self.is_dead:
             self.kill()
             return
+
         if self.rect.colliderect(self.screen.get_rect()):
             self.iterate_index(len(self.images))
             self.image = self.images[self.index]
-
-            # gravity
             self.rect.centery += self.settings.gravity
 
             if self.facing_left:
@@ -55,15 +53,6 @@ class Koopa(Sprite):
     def draw(self):
         self.screen.blit(self.image, self.rect)
 
-    def iterate_index(self, max_):
-        time = pygame.time.get_ticks() - self.last_tick
-        if time > 200:
-            self.index += 1
-            self.last_tick = pygame.time.get_ticks()
-
-        if self.index == max_:
-            self.index = 0
-
     def dead(self, map_group=None, enemy_group=None, fireball_group=None):
         self.settings.score_manager += self.settings.point_values['koopa']
         self.is_dead = True
@@ -71,3 +60,11 @@ class Koopa(Sprite):
         if map_group != None and enemy_group != None and fireball_group != None:
             s = Shell(self.screen, self.settings, self.rect.centerx, self.rect.centery)
             s.add(map_group, enemy_group, fireball_group)
+
+    def iterate_index(self, max_):
+        time = pygame.time.get_ticks() - self.last_tick
+        if time > 200:
+            self.index += 1
+            self.last_tick = pygame.time.get_ticks()
+        if self.index == max_:
+            self.index = 0
