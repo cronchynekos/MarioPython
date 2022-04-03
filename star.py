@@ -1,4 +1,3 @@
-
 import pygame
 from pygame.sprite import Sprite
 
@@ -9,15 +8,15 @@ class Star(Sprite):
         self.name = "Star"
         self.screen = screen
         self.settings = settings
-
-        self.facing_left = False
-        self.is_falling = False
-        self.kill_flag = False
-        self.is_moving = False
-        self.start_spawn = False
-
         self.index = 0
         self.last_tick = pygame.time.get_ticks()
+        self.moving = False
+        self.spawn = False
+
+        self.facingL = False
+        self.falling = False
+        self.flag = False
+
 
         self.image = pygame.transform.scale(pygame.image.load("Images/white.png"),
                                             (self.settings.star_width, self.settings.star_height))
@@ -25,7 +24,7 @@ class Star(Sprite):
         self.rect = self.image.get_rect()
         self.initial_pos = (self.rect.x, self.rect.y)
         self.target_pos = (self.rect.x, self.rect.y - self.rect.h - 1)
-        self.wait_count = 0
+        self.wCount = 0
         self.set_max_jump_height()
 
         self.images = []
@@ -39,10 +38,10 @@ class Star(Sprite):
                                                   (self.settings.star_width, self.settings.star_height)))
 
     def draw(self):
-        self.screen.blit(pygame.transform.flip(self.image, self.facing_left, False), self.rect)
+        self.screen.blit(pygame.transform.flip(self.image, self.facingL, False), self.rect)
 
     def spawn(self):
-        self.start_spawn = True
+        self.spawn = True
 
     def get_position(self):
         return (self.rect.x, self.rect.y)
@@ -60,41 +59,36 @@ class Star(Sprite):
         self.max_jump_height = self.rect.centery - self.settings.star_max_jump_height/3
 
     def mark_for_death(self):
-        self.kill_flag = True
+        self.flag = True
 
     def update(self):
         self.iterate_index(len(self.images))
         self.image = self.images[self.index]
 
-        if self.start_spawn:
-            # print('star target y: ' + str(self.target_pos[1]) + ' actual y: ' + str(self.rect.y))
+        if self.spawn:
             if self.rect.y > self.target_pos[1]:
                 self.rect.y = self.rect.y - self.settings.item_spawn_speed
             else:
-                self.rect.y = self.target_pos[1]
-                # print('star target y: ' + str(self.target_pos[1]) + ' actual y: ' + str(self.rect.y))
-                # print('star height: ' + str(self.rect.h))
-                self.start_spawn = False
+                self.wCount = 0
                 self.set_initial_max_jump_height()
-                self.wait_count = 0
-                self.is_moving = True
-        elif self.is_moving and self.wait_count <= 5:
-            self.wait_count += 1
+                self.rect.y = self.target_pos[1]
+                self.spawn = False
+                self.moving = True
+        elif self.moving and self.wCount <= 5:
+            self.wCount += 1
 
-        if self.is_moving and self.wait_count > 5:
-            if self.facing_left:
+        if self.moving and self.wCount > 5:
+            if self.facingL:
                 self.rect.centerx -= self.settings.star_speed
             else:
                 self.rect.centerx += self.settings.star_speed
 
-            if self.is_falling:
+            if self.falling:
                 self.rect.centery += self.settings.star_jump
-            elif not self.is_falling and self.rect.centery < self.max_jump_height:
-                # hit top limit
-                self.is_falling = True
-            elif not self.is_falling:
+            elif not self.falling and self.rect.centery < self.max_jump_height:
+                self.falling = True
+            elif not self.falling:
                 self.rect.centery -= self.settings.star_jump
-
 
     def iterate_index(self, max):
         time = pygame.time.get_ticks() - self.last_tick
@@ -102,11 +96,5 @@ class Star(Sprite):
             self.index += 1
             self.last_tick = pygame.time.get_ticks()
 
-            # temporarily placed movement in iterate, should belong in its own function
-            # if self.is_falling:
-            #     self.rect.centery += self.settings.star_jump
-            # else:
-            #     self.rect.centery -= self.settings.star_jump
         if self.index == max:
             self.index = 0
-            # self.is_falling = not self.is_falling
