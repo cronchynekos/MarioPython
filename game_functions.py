@@ -107,7 +107,7 @@ def enemy_stomp(e, mario, map_group, enemy_group, fireball_group, dead_group):
 
 def mario_flag_collide(mario, flag, settings):
     if pygame.sprite.collide_rect(mario, flag):
-        settings.score_holder += settings.point_values['flag-mid']
+        settings.score_manager += settings.point_values['flag-mid']
         pygame.mixer.music.stop()
         pygame.mixer.music.load("Sounds/stage_clear.wav")
         pygame.mixer.music.play()
@@ -125,11 +125,11 @@ def mario_powerup_collide(mario, map_group, powerup_group, settings):
     for c in collisions:
         if c.name == "One Up":
             pygame.mixer.Sound("Sounds/1-up.wav").play()
-            settings.score_holder += settings.point_values['one-up']
+            settings.score_manager += settings.point_values['one-up']
             settings.one_up = True
         elif c.name == "Mushroom":
             pygame.mixer.Sound("Sounds/powerup.wav").play()
-            settings.score_holder += settings.point_values['mushroom']
+            settings.score_manager += settings.point_values['mushroom']
             mario.index = 0
             if mario.state == 2:
                 return
@@ -139,7 +139,7 @@ def mario_powerup_collide(mario, map_group, powerup_group, settings):
                 mario.grow = True
         elif c.name == "Fire Flower":
             pygame.mixer.Sound("Sounds/powerup.wav").play()
-            settings.score_holder += settings.point_values['fire-flower']
+            settings.score_manager += settings.point_values['fire-flower']
             mario.fire_flower = True
             mario.was_fire = True
             print('set to fire' + str(mario.was_fire))
@@ -150,7 +150,7 @@ def mario_powerup_collide(mario, map_group, powerup_group, settings):
         elif c.name == "Star":
             pygame.mixer.music.stop()
             pygame.mixer.music.load("Sounds/starman.mp3")
-            settings.score_holder += settings.point_values['star']
+            settings.score_manager += settings.point_values['star']
             pygame.mixer.music.play(loops=-1)
             if mario.state == 0:
                 mario.state = 3

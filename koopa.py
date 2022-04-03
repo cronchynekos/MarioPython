@@ -65,7 +65,7 @@ class Koopa(Sprite):
             self.index = 0
 
     def dead(self, map_group=None, enemy_group=None, fireball_group=None):
-        self.settings.score_holder += self.settings.point_values['koopa']
+        self.settings.score_manager += self.settings.point_values['koopa']
         self.is_dead = True
 
         if map_group != None and enemy_group != None and fireball_group != None:

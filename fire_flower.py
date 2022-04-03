@@ -63,7 +63,7 @@ class Fire_Flower(Sprite):
             if self.start_spawn:
                 # print('fflower target y: ' + str(self.target_pos[1]) + ' actual y: ' + str(self.rect.y))
                 if self.rect.y > self.target_pos[1]:
-                    self.rect.y = self.rect.y - self.settings.item_box_spawn_speed
+                    self.rect.y = self.rect.y - self.settings.item_spawn_speed
                 else:
                     self.rect.y = self.target_pos[1]
                     # print('fflower target y: ' + str(self.target_pos[1]) + ' actual y: ' + str(self.rect.y))

@@ -72,7 +72,7 @@ class Goomba(Sprite):
             self.index = 0
 
     def dead(self):
-        self.settings.score_holder += self.settings.point_values['goomba']
+        self.settings.score_manager += self.settings.point_values['goomba']
         self.image = pygame.transform.scale(pygame.image.load("Images/goomba_death.png"),
                                             (self.settings.goomba_width, self.settings.goomba_height))
         self.death_timer = pygame.time.get_ticks()

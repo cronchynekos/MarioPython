@@ -150,8 +150,8 @@ def run():
 
 
             # update game values
-            stats.add_score(settings.score_holder)
-            stats.add_coin(settings.coin_holder)
+            stats.add_score(settings.score_manager)
+            stats.add_coin(settings.coin_manager)
             if settings.one_up:
                 stats.lives += 1
                 settings.one_up = False

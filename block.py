@@ -138,7 +138,7 @@ class Block(Sprite):
                 rubble_group.add(rubble)
                 map_group.add(rubble)
             self.break_sound.play()
-            self.settings.score_holder = self.settings.point_values['brick']
+            self.settings.score_manager = self.settings.point_values['brick']
             self.kill()
 
     def draw(self):
