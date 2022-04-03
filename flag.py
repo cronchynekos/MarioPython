@@ -23,16 +23,16 @@ class Flag(Sprite):
         self.flag_rect.left = xpos - self.settings.block_width / 2
         self.flag_rect.bottom = ypos - self.settings.block_height
 
-    def draw(self):
-        self.screen.blit(self.image, self.rect)
-
-    def draw_flag(self):
-        if self.raise_flag:
-            self.screen.blit(self.flag_image, self.flag_rect)
-
     def update(self):
         self.flag_rect.left = self.rect.left - self.settings.block_width / 2
         if self.raise_flag:
             self.flag_rect.top -= self.settings.flag_speed
             if self.flag_rect.top < self.rect.top + 24:
                 self.flag_rect.top = self.rect.top + 24
+
+    def draw(self):
+        self.screen.blit(self.image, self.rect)
+
+    def draw_flag(self):
+        if self.raise_flag:
+            self.screen.blit(self.flag_image, self.flag_rect)

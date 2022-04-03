@@ -3,22 +3,20 @@ from pygame.sprite import Sprite
 
 
 class Fireball(Sprite):
-    # Class to manage fireballs
 
     def __init__(self, screen, settings, xpos, ypos):
-        # Create fireball where Mario currently is
         super().__init__()
+        self.name = "Fireball"
         self.screen = screen
         self.settings = settings
-        self.facing_left = False
         self.is_falling = True
         self.is_moving = True
-        self.bounces = 0
+        self.facing_left = False
         self.explode = False
+        self.bounces = 0
         self.index = 0
         self.explosion_index = 0
         self.last_tick = pygame.time.get_ticks()
-        self.name = "Fireball"
 
         self.image = pygame.transform.scale(pygame.image.load("Images/fireball_1.png"),
                                             (self.settings.fireball_width, self.settings.fireball_height))
@@ -30,7 +28,6 @@ class Fireball(Sprite):
         self.max_jump_height = 0
         self.set_max_jump_height()
 
-        # Images for fireball
         self.images = []
         self.images.extend([pygame.transform.scale(pygame.image.load("Images/fireball_1.png"),
                                                    (self.settings.fireball_width, self.settings.fireball_height)),
@@ -51,7 +48,7 @@ class Fireball(Sprite):
                                                            (self.settings.fireball_width,
                                                             self.settings.fireball_height))])
 
-        # Store location
+        # Location of the fireball
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
         self.fireball_speed = settings.fireball_speed
@@ -76,14 +73,14 @@ class Fireball(Sprite):
         self.explosion_index = 0
         self.is_moving = False
 
-    def check_off_screen(self):
+    def check_offscreen(self):
         if self.rect.x < 0 or \
                 self.rect.y > self.settings.screen_height or \
                 self.rect.y < 0:
             self.kill()
 
     def update(self):
-        self.check_off_screen()
+        self.check_offscreen()
 
         if self.explode:
             self.iterate_index(len(self.explode_frames))
@@ -92,7 +89,6 @@ class Fireball(Sprite):
             self.iterate_index(len(self.images))
             self.image = self.images[self.index]
 
-        # Update Position
         if self.is_moving:
             if self.facing_left:
                 self.rect.centerx -= self.settings.fireball_speed
@@ -115,11 +111,6 @@ class Fireball(Sprite):
             if self.explode:
                 self.explosion_index += 1
 
-            # temporarily placed movement in iterate, should belong in its own function
-            # if self.fall:
-            #     self.rect.centery += self.settings.fireball_jump
-            # else:
-            #     self.rect.centery -= self.settings.fireball_jump
         if self.index == max:
             self.index = 0
 
@@ -127,4 +118,3 @@ class Fireball(Sprite):
             self.explosion_index = 0
             if self.explode:
                 self.kill()
-            # self.fall = not self.fall

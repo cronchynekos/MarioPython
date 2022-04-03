@@ -1,5 +1,3 @@
-
-
 import pygame
 from pygame.sprite import Sprite
 
@@ -10,12 +8,13 @@ class Shell(Sprite):
         super().__init__()
         self.settings = settings
         self.screen = screen
+        self.facing_left = False
         self.fall = False
         self.active = False
-        self.hit_wall = False
         self.is_dead = False
+        self.hit_wall = False
         self.is_moving = True
-        self.facing_left = False
+
         self.name = "Shell"
         self.death_timer = -1000
 
@@ -25,9 +24,6 @@ class Shell(Sprite):
         self.rect.centerx = xpos
         self.rect.centery = ypos
 
-    def draw(self):
-        self.screen.blit(self.image, self.rect)
-
     def update(self):
         if self.is_dead:
             return
@@ -36,3 +32,6 @@ class Shell(Sprite):
                 self.rect.centerx -= self.settings.shell_speed
             else:
                 self.rect.centerx += self.settings.shell_speed
+
+    def draw(self):
+        self.screen.blit(self.image, self.rect)

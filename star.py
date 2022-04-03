@@ -6,15 +6,15 @@ from pygame.sprite import Sprite
 class Star(Sprite):
     def __init__(self, screen, settings):
         super(Star, self).__init__()
+        self.name = "Star"
         self.screen = screen
         self.settings = settings
 
         self.facing_left = False
-        self.is_moving = False
-        self.start_spawn = False
         self.is_falling = False
         self.kill_flag = False
-        self.name = "Star"
+        self.is_moving = False
+        self.start_spawn = False
 
         self.index = 0
         self.last_tick = pygame.time.get_ticks()

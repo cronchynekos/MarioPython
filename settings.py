@@ -6,25 +6,24 @@ from text import Text
 class Settings:
     def __init__(self):
         self.BASE_PATH = abspath(dirname(__file__))
-        self.IMAGE_PATH = self.BASE_PATH + '/Images/'
         self.SOUND_PATH = self.BASE_PATH + '/Sounds/'
+        self.IMAGE_PATH = self.BASE_PATH + '/Images/'
 
-        # General Settings
+        # Settings
         self.screen_width = 1280
         self.screen_height = 720
-        self.bg_color = (0, 0, 0)
         self.image_scale = 3
         self.fps = 60
-
-        # Text UI Settings
+        self.bg_color = (0, 0, 0)
+        # Text
         self.WHITE = (255, 255, 255)
-        self.TEXT_SIZE = 36
         self.ALT_TEXT_SIZE = 20
         self.SPACER = 54
+        self.TEXT_SIZE = 36
 
-        # Score holder
-        self.score_holder = 0
-        self.coin_holder = 0
+        # Manages Score
+        self.score_manager = 0
+        self.coin_manager = 0
         self.one_up = False
 
         # Point Dictionary
@@ -43,11 +42,12 @@ class Settings:
             "flag-bot": 100
         }
 
-        # Mario Settings
-        self.bm_width = 16 * self.image_scale - 2
-        self.bm_height = 32 * self.image_scale
+        # Player Settings
         self.sm_width = 16 * self.image_scale - 2
         self.sm_height = 16 * self.image_scale
+        self.bm_width = 16 * self.image_scale - 2
+        self.bm_height = 32 * self.image_scale
+
         self.mario_walk = 4 * self.image_scale
         self.mario_run = 6 * self.image_scale
         self.mario_jump = 8 * self.image_scale
@@ -61,23 +61,22 @@ class Settings:
         self.star_max_jump_height = 2 * self.sm_height
 
         # Coin Settings
-        self.coin_width = 16 * self.image_scale
         self.coin_height = 16 * self.image_scale
+        self.coin_width = 16 * self.image_scale
         self.coin_move_factor = 2
         self.coin_initial__move_speed = -32
         self.coin_gravity = 1.01
 
-        # Fire Flower Settings
+        # Flower and Fireball Settings
+        self.fireball_width = 8 * self.image_scale
+        self.fireball_height = 8 * self.image_scale
         self.fire_flower_width = 16 * self.image_scale
         self.fire_flower_height = 16 * self.image_scale
 
-        # Fireball Settings
-        self.fireball_limit = 2
-        self.fireball_width = 8 * self.image_scale
-        self.fireball_height = 8 * self.image_scale
         self.fireball_speed = 6 * self.image_scale
         self.fireball_jump = 4 * self.image_scale
         self.fireball_max_jump_height = 0.75 * self.sm_height
+        self.fireball_limit = 2
         self.fireball_sound = self.SOUND_PATH + 'fireball.wav'
 
         # Floor Settings
