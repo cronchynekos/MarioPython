@@ -35,8 +35,7 @@ def generate_floor(screen, settings, map_group, floor_group, pipe_group):
         fl = Floor(screen, settings)
         fl.rect.top = 14 * settings.floor_height
         fl.rect.left = i * settings.floor_width
-        # print('floor top: ' + str(f.rect.top))
-        # print('floor x,y: ' + str(f.rect.x) + ', ' + str(f.rect.y))
+
         f.add(map_group, floor_group)
         fl.add(map_group, floor_group)
     for i in range(71, 86):

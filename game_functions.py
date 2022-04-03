@@ -5,9 +5,8 @@ from star import Star
 
 
 def check_events(state, mario, screen, settings, fireball_group, map_group):
-    # Check key and mouse events
+    # Checks for mouse and keyboard inputs
     for event in pygame.event.get():
-        # Quit game events
         if event.type == pygame.QUIT:
             state.running = False
         elif event.type == pygame.KEYDOWN:
