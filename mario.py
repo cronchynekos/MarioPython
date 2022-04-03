@@ -263,7 +263,7 @@ class Mario(Sprite):
         self.screen.blit(pygame.transform.flip(self.image, self.facing_left, False), self.rect)
 
     def dead(self):
-        self.is_dead = True  # need to add code for killing and animating mario death
+        self.is_dead = True
         self.image = self.sm_dead
         pygame.mixer.music.stop()
         if self.stats.lives == 0:
@@ -289,7 +289,6 @@ class Mario(Sprite):
             return
 
         if self.is_flag:
-            # change mario image
             return
 
         if self.victory and not self.is_flag and self.victory_count < 30:
@@ -307,10 +306,8 @@ class Mario(Sprite):
             time = pygame.time.get_ticks() - self.invincible_tick
             if time > 3000:
                 self.iframes = False
-        # Update Movement
         self.walk = False
         if not self.shrink and not self.grow:
-            # print("has hit wall: " + str(self.hit_wall))
             if self.move_right and not self.crouch:
                 self.walk = True
                 if self.hit_wall:
@@ -334,8 +331,6 @@ class Mario(Sprite):
                     self.x -= self.settings.mario_run
                 else:
                     self.x -= self.settings.mario_walk
-            # else:
-            #     print('no wall hit')
 
             if self.is_falling:
                 self.y += self.settings.gravity
@@ -351,9 +346,8 @@ class Mario(Sprite):
                     self.is_falling = False
                     self.jump = True
 
-        # Update animation states and hitbox and position
-        if self.state == 0:  # Small Mario
-            if self.grow:  # On mushroom collision set index to 0
+        if self.state == 0:
+            if self.grow:
                 self.iterate_once(len(self.sm_grow))
                 temp = self.rect.copy()
                 self.image = self.sm_grow[self.index]
@@ -378,8 +372,8 @@ class Mario(Sprite):
                 self.rect = self.image.get_rect()
                 self.rect.x = self.x
                 self.rect.y = self.y
-        elif self.state == 1:  # Big Mario
-            if self.shrink:  # On enemy collsion set indeox to 0
+        elif self.state == 1:  #Big Mario
+            if self.shrink:
                 self.iterate_once(len(self.bm_shrink))
                 temp = self.rect.copy()
                 self.image = self.bm_shrink[self.index]
@@ -408,7 +402,7 @@ class Mario(Sprite):
                 self.rect.x = self.x
                 self.rect.y = self.y
         elif self.state == 2:  # Fire Mario
-            if self.shrink:  # On enemy collision set index to 0
+            if self.shrink:
                 self.iterate_once(len(self.fm_shrink))
                 temp = self.rect.copy()
                 self.image = self.fm_shrink[self.index]
