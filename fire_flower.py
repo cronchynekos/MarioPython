@@ -54,20 +54,17 @@ class Fire_Flower(Sprite):
     def mark_for_death(self):
         self.kill_flag = True
 
+# updates the flower
     def update(self):
         self.iterate_index(len(self.images))
         self.image = self.images[self.index]
 
-        # Position Code:
         if self.start_spawn:
             if self.start_spawn:
-                # print('fflower target y: ' + str(self.target_pos[1]) + ' actual y: ' + str(self.rect.y))
                 if self.rect.y > self.target_pos[1]:
                     self.rect.y = self.rect.y - self.settings.item_spawn_speed
                 else:
                     self.rect.y = self.target_pos[1]
-                    # print('fflower target y: ' + str(self.target_pos[1]) + ' actual y: ' + str(self.rect.y))
-                    # print('fflower height: ' + str(self.rect.h))
                     self.start_spawn = False
 
     def iterate_index(self, max):

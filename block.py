@@ -33,7 +33,8 @@ class Block(Sprite):
         self.break_sound = mixer.Sound(settings.break_brick_sound)
         self.has_item = False
 
-        # initial block image
+        # starting block
+        # check if block is stairs or is underground
         if is_stairs:
             self.initial_image = pygame.transform.scale(
                 image.load(settings.block_stairs_image),
@@ -58,12 +59,12 @@ class Block(Sprite):
         self.image = self.initial_image
         self.rect = self.image.get_rect()
 
-        # Block Movement Settings
+        # Settings for moving the block and collision with player and enemies
         self.y_vel = settings.brick_initial_move_speed
-        self.initial_pos = (self.rect.x, self.rect.y)
         self.max_height_movement = self.rect.top - (settings.brick_move_factor * self.rect.h)
-
         self.collision_pts = self.get_collision_points()
+        self.initial_pos = (self.rect.x, self.rect.y)
+
 
     def set_position(self, top, left):
         self.rect.top = top * self.settings.block_height
@@ -82,9 +83,6 @@ class Block(Sprite):
         }
         return self.collision_pts
 
-    # def collision_check(self, sprite_object):
-    #     pass
-
     def get_spawned_item(self):
         pass
 
@@ -98,7 +96,6 @@ class Block(Sprite):
 
     def update(self):
         if self.is_moving:
-            # TODO animate block
             if self.rect.y > self.max_height_movement and self.y_vel < 0:
                 self.rect.y += (abs(self.y_vel) * -1)
             elif self.rect.y <= self.initial_pos[1]:
@@ -106,24 +103,13 @@ class Block(Sprite):
             else:
                 self.rect.y = self.initial_pos[1]
 
-            # adjust velocity
+            # Changes the velocity updating
             if self.rect.y <= self.initial_pos[1]:
                 self.y_vel += (abs(self.y_vel) * self.settings.brick_gravity)
-                # print('y velocity: ' + str(self.y_vel))
             else:
                 self.rect.top = self.initial_pos[1]
                 self.y_vel = self.settings.brick_initial_move_speed
                 self.is_moving = False
-        # pass
-
-    def animate_block_movement(self):
-        pass
-
-    def animate_internal_object(self, sprite_object):
-        # TODO animate internal object to move to top of block
-        if sprite_object:
-            print('TODO - get sprite_object rect and move block')
-        pass
 
     def break_block(self, rubble_group, map_group):
         if self.is_hittable:
@@ -190,10 +176,8 @@ class BrickRubblePiece(Sprite):
         self.y_speed = y_speed
 
     def update(self):
-        # update image
         self.iterate_index(len(self.frames_list))
         self.image = self.frames_list[self.f_index]
-        #update pos
         self.rect.x += self.x_speed
         if self.hit_max_arc == False and self.rect.y > self.max_height:
             self.rect.y -= self.y_speed
@@ -248,7 +232,6 @@ class CoinBlock(Block):
     def update(self):
         # Adjust Position
         if self.is_moving:
-            # TODO animate block
             if self.rect.y > self.max_height_movement and self.y_vel < 0:
                 self.rect.y += (abs(self.y_vel) * -1)
             elif self.rect.y <= self.initial_pos[1]:
@@ -256,44 +239,35 @@ class CoinBlock(Block):
             else:
                 self.rect.y = self.initial_pos[1]
 
-            # adjust velocity
             if self.rect.y <= self.initial_pos[1]:
                 self.y_vel += (abs(self.y_vel) * self.settings.brick_gravity)
-                # print('y velocity: ' + str(self.y_vel))
             else:
                 self.rect.top = self.initial_pos[1]
                 self.y_vel = self.settings.brick_initial_move_speed
                 self.is_moving = False
 
     def break_block(self, rubble_group, map_group):
-        print('coins remaining: ' + str(len(self.coins)))
+        print('coins left: ' + str(len(self.coins)))
         if len(self.coins) <= 0:
             super().break_block( rubble_group=rubble_group, map_group=map_group)
 
     def handle_bottom_collision(self, map_group, can_break_block=False):
         if self.is_hittable:
-            # TODO - figure out if need to adjust collided object physics
             self.has_item = self.num_coins_left > 0
-            # Check if coins
+            # Check to see if there is a coin or not
             if self.has_item:
                 self.num_coins_left -= 1
-
-                # Animate Coin Trigger
-                # TODO call coin animation - Make sure coin animation plays points
                 coin_obj = self.coins.pop()
                 coin_obj.set_position(self.rect.top, self.rect.left)
                 coin_obj.add(map_group)
                 coin_obj.spawn()
                 self.curr_item = coin_obj
 
-
-                # Play Coin Sounds
+                # Used to play the coin sound
                 self.sound.play()
-
-                # Animate box movement
                 self.is_moving = True
 
-            # Set coinblock to empty if no coins
+            # Resets to empty if there was no coins there
             if self.num_coins_left <= 0:
                 self.set_empty()
 
@@ -328,7 +302,6 @@ class MysteryBlock(Block):
 
         if is_invisible:
             self.initial_image = pygame.Surface([settings.brick_width, settings.brick_height], pygame.SRCALPHA, 32).convert_alpha()
-            # TODO - remove this fill statement for hidden block
             self.initial_image.fill((255, 255, 255, 0))
             length = len(self.images_idle)
             self.images_idle.clear()
@@ -344,12 +317,9 @@ class MysteryBlock(Block):
 
     def update(self):
         if not self.is_empty:
-            # update idle frames
             self.iterate_index(len(self.images_idle))
             self.image = self.images_idle[self.index]
-        # Adjust Position
         if self.is_moving:
-            # TODO animate block
             if self.rect.y > self.max_height_movement and self.y_vel < 0:
                 self.rect.y += (abs(self.y_vel) * -1)
             elif self.rect.y <= self.initial_pos[1]:
@@ -357,10 +327,8 @@ class MysteryBlock(Block):
             else:
                 self.rect.y = self.initial_pos[1]
 
-            # adjust velocity
             if self.rect.y <= self.initial_pos[1]:
                 self.y_vel += (abs(self.y_vel) * self.settings.brick_gravity)
-                # print('y velocity: ' + str(self.y_vel))
             else:
                 self.rect.top = self.initial_pos[1]
                 self.y_vel = self.settings.brick_initial_move_speed
@@ -378,9 +346,7 @@ class MysteryBlock(Block):
 
     def handle_bottom_collision(self, map_group, can_break_block=False):
         if self.is_hittable:
-            # TODO - figure out if need to adjust collided object physics
             if not self.is_empty:
-                # Animate Contained Sprite to Appear
                 item = self.make_item_appear()
                 if item:
                     item.set_position(self.rect.top, self.rect.left)
@@ -388,16 +354,9 @@ class MysteryBlock(Block):
                     item.add(map_group)
                     self.curr_item = item
                     self.has_item = True
-                # Play Sounds
                 self.sound.play()
-
-                # start moving block
                 self.is_moving = True
-
-                # Change To Empty
                 self.set_empty()
-        # else:
-        # if collides with bottom and empty, force mario back down
 
     def get_spawned_item(self):
         if self.has_item:
@@ -405,40 +364,26 @@ class MysteryBlock(Block):
             return self.curr_item
 
     def make_item_appear(self):
-        # TODO: animate sprite to appear in if/else below
-        #   Move sprite up until bottom of sprite is at top of block
         obj = None
         if self.stored_item == self.settings.mystery_block_possible_items['MUSHROOM']:
-            print('Mushroom item appears!')
             obj = Mushroom(self.screen, self.settings)
-            obj.spawn()
-
-        elif self.stored_item == self.settings.mystery_block_possible_items['FIRE_FLOWER']:
-            print('Flower item appears!')
-            obj = Fire_Flower(self.screen, self.settings)
-            obj.spawn()
-
 
         elif self.stored_item == self.settings.mystery_block_possible_items['COIN']:
-            print('Coin item appears!')
             obj = Coin(self.screen, self.settings)
             obj.spawn()
 
         elif self.stored_item == self.settings.mystery_block_possible_items['ONE_UP']:
-            print('1UP item appears!')
             obj = Mushroom(self.screen, self.settings, is_one_up=True)
             obj.spawn()
 
-        elif self.stored_item == self.settings.mystery_block_possible_items['STAR']:
-            print('Star item appears!')
-            obj = Star(self.screen, self.settings)
+        elif self.stored_item == self.settings.mystery_block_possible_items['FIRE_FLOWER']:
+            obj = Fire_Flower(self.screen, self.settings)
             obj.spawn()
 
-        else:
-            # shouldn't be empty!
-            print('WARNING - mystery block missing item')
+        elif self.stored_item == self.settings.mystery_block_possible_items['STAR']:
+            obj = Star(self.screen, self.settings)
+            obj.spawn()
         return obj
-        # self.animate_internal_object(obj)
 
     def iterate_index(self, max_index):
         time = pygame.time.get_ticks() - self.last_tick
@@ -453,7 +398,6 @@ class BrickMysteryBlock(MysteryBlock):
     def __init__(self, screen, settings, stored_item='', is_underground=False):
         super(BrickMysteryBlock, self).__init__(screen, settings, stored_item=stored_item, is_invisible=False, is_underground=is_underground)
 
-        # initial block image
         if is_underground:
             self.initial_image = pygame.transform.scale(
                 image.load(settings.brick_ug_image),
