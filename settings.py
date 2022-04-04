@@ -28,7 +28,6 @@ class Settings:
         self.one_up = False
 
         # Point Dictionary
-        # TODO - finish points list
         self.point_values = {
             "coin": 200,
             "fire-flower": 1000,
@@ -158,7 +157,7 @@ class Settings:
 
         # Misc Settings
         self.gravity = 4 * self.image_scale
-        self.item_spawn_speed = 2 * self.image_scale
+        self.item_box_spawn_speed = 2 * self.image_scale
 
     def reset_holders(self):
         self.score_manager = 0
